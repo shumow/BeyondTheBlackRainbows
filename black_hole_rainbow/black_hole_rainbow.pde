@@ -1,6 +1,8 @@
 import java.util.Iterator;
 import java.util.LinkedList;
 
+final boolean do_ye_olde_blending_trick = false;
+
 final float black_hole_radius = 100.0;
 final float black_hole_halo_width = 10.0;
 
@@ -102,6 +104,7 @@ void setup()
   
   particle_list = new LinkedList<Particle>();
   initialize_particle_list();
+  background(0);
 }
 
 final int new_particles_per_second = (int)(2.0*TWO_PI*black_hole_radius);
@@ -160,7 +163,17 @@ void draw()
   
   update(dt);
   
-  background(0);
+  if (do_ye_olde_blending_trick)
+  {
+    pushStyle();
+    colorMode(ARGB);
+    fill(0,0,0,254);
+    rectMode(CENTER);
+    fill(0,0,width,height);
+    popStyle();
+  } else {
+    background(0);
+  }
   
   pushStyle();
     for (Particle p : particle_list)
