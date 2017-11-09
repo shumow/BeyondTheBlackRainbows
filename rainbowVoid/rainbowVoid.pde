@@ -1,3 +1,5 @@
+final boolean draw_segments = true;
+
 void setup()
 { size(500, 500,P3D);}
 
@@ -40,17 +42,34 @@ void drawLine(float len)
   colorMode(HSB, 255);
   //number of segments in the line to draw more segments = finer gradient detail
   int segments = 100;
+  
+  if (!draw_segments)
+  {
+    segments = 20;
+  }
+  
   noFill();
-  beginShape();
+  if (draw_segments)
+  {
+    beginShape();
+  }
   for (int i = 0; i < segments; i++)
   {
     float pct = i*1.f/segments;
     //color could also be based on the relative distance between two points...
     int color_ = color(255*pct, 255, 255);
     stroke(color_);
-    vertex(len*pct, 0);
+    if (draw_segments)
+    {
+      vertex(len*pct, 0);
+    } else {
+      point(len*pct, 0);
+    }
   }
-  endShape();
+  if (draw_segments)
+  {
+    endShape();
+  }
   popStyle();
 }
 
