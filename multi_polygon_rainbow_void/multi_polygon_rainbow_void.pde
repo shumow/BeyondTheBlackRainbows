@@ -3,8 +3,8 @@ final int halo_width = 5;
 
 final int cnt_shapes = 20;
 
-final float min_rotational_speed = TWO_PI/6;
-final float max_rotational_speed = TWO_PI/3;
+final float min_rotational_speed = TWO_PI/20;
+final float max_rotational_speed = TWO_PI/7;
 
 final float min_poly_radius = (float)(void_width + halo_width)/2;
 final float max_poly_radius = 220;
@@ -34,11 +34,10 @@ void setup()
   {
     sides[i] = (int)floor(random(min_sides, max_sides+1));
 
-    float alpha = HALF_PI - TWO_PI/sides[i];
+    float alpha = HALF_PI - PI/sides[i];
 
     float min_radii = min_poly_radius/sin(alpha);
     float max_radii = max_poly_radius;
-    float radial_lat = max_poly_radius - 2*min_poly_radius/sqrt(3);
     
     speeds[i] = random(min_rotational_speed, max_rotational_speed);
     radii[i] = random(min_radii, max_radii);
