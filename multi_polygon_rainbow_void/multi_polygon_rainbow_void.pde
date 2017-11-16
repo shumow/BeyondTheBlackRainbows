@@ -38,8 +38,12 @@ void setup()
 
     float min_radii = min_poly_radius/sin(alpha);
     float max_radii = max_poly_radius;
+ 
+    int[] dirs = {-1,1}; 
     
-    speeds[i] = random(min_rotational_speed, max_rotational_speed);
+    int dir = dirs[(int)random(0,2)];
+    
+    speeds[i] = dir*random(min_rotational_speed, max_rotational_speed);
     radii[i] = random(min_radii, max_radii);
 
     radial_latitudes[i] = 0.0;

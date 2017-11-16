@@ -4,8 +4,8 @@ final int halo_width = 5;
 final int cnt_shapes = 20;
 final int cnt_sides = 11;
 
-final float min_rotational_speed = TWO_PI/10;
-final float max_rotational_speed = TWO_PI/3;
+final float min_rotational_speed = TWO_PI/20;
+final float max_rotational_speed = TWO_PI/7;
 
 final float avg_radius = 167.0;
 final float max_radial_latitude = 43.0;
@@ -24,9 +24,15 @@ void setup()
   speeds = new float[cnt_shapes];
   radial_latitudes = new float[cnt_shapes];
   
+   
+  int[] dirs = {-1,1}; 
+    
+
+  
   for (int i = 0; i < cnt_shapes; i++)
   {
-    speeds[i] = random(min_rotational_speed, max_rotational_speed);
+    int dir = dirs[(int)random(0,2)];
+    speeds[i] = dir*random(min_rotational_speed, max_rotational_speed);
     radial_latitudes[i] = random(-max_radial_latitude, max_radial_latitude);
   }
   
