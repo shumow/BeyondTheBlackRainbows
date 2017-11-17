@@ -1,3 +1,5 @@
+final boolean breathing_polygons = true;
+
 final int void_width = 200;
 final int halo_width = 5;
 
@@ -12,10 +14,14 @@ final float max_poly_radius = 220;
 final int min_sides = 3;
 final int max_sides = 17;
 
+final float min_breath_speed = TWO_PI/20;
+final float max_breath_speed = TWO_PI/13;
+
 float[] speeds;
 float[] radii;
 float[] radial_latitudes;
 int[] sides;
+float[] breath_rates;
 
 void setup()
 {
@@ -29,6 +35,7 @@ void setup()
   radii = new float[cnt_shapes];
   radial_latitudes = new float[cnt_shapes];
   sides = new int[cnt_shapes];
+  breath_rates = new int[cnt_shapes];
   
   for (int i = 0; i < cnt_shapes; i++)
   {
@@ -46,7 +53,17 @@ void setup()
     speeds[i] = dir*random(min_rotational_speed, max_rotational_speed);
     radii[i] = random(min_radii, max_radii);
 
-    radial_latitudes[i] = 0.0;
+    if (breathing_polygons)
+    {
+      float latitude_bound = min(radii[i] - min_radii, max_radii - radii[i]);
+      radial_latitudes[i] = random(0, latitude_bound);
+      breath_rates[i] = random(min_breath_speed, max_breath_speed);
+    }
+    else
+    {
+      radial_latitudes[i] = 0.0;
+      breath_rates[i] = 0.0;
+    }
   }
   
   t = millis()/1000.0;
@@ -70,12 +87,13 @@ PImage draw_mask()
     float lat = radial_latitudes[i];
     int cnt_sides = sides[i];
     float radius = radii[i];
+    float breath_rate = breath_rates[i];
     for (int j = 0; j < cnt_sides; j++)
     {
-      imgMask.line(400 + (radius + lat)*cos(t*speed + TWO_PI*j/cnt_sides),
-                   400 + (radius + lat)*sin(t*speed + TWO_PI*j/cnt_sides),
-                   400 + (radius + lat)*cos(t*speed + TWO_PI*(j+1)/cnt_sides),
-                   400 + (radius + lat)*sin(t*speed + TWO_PI*(j+1)/cnt_sides));      
+      imgMask.line(400 + (radius + lat*sin(t*speed))*cos(t*speed + TWO_PI*j/cnt_sides),
+                   400 + (radius + lat*sin(t*speed))*sin(t*speed + TWO_PI*j/cnt_sides),
+                   400 + (radius + lat*sin(t*speed))*cos(t*speed + TWO_PI*(j+1)/cnt_sides),
+                   400 + (radius + lat*sin(t*speed))*sin(t*speed + TWO_PI*(j+1)/cnt_sides));      
     }
   }
   
