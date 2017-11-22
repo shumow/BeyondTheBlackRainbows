@@ -42,21 +42,25 @@ class OrbitalParticle
     this.delta = new_delta;
   
     float theta = beta;
+
+    float r = gamma*sin(theta) + delta;
   
-    pos = new PVector(gamma*cos(theta) + delta, gamma*sin(theta) + delta);
+    pos = new PVector(r*cos(theta), r*sin(theta));
   }
   
   void update(float t)
   {
     float theta = alpha*t + beta;
     
-    this.pos.x = gamma*cos(theta) + delta;
-    this.pos.y = gamma*sin(theta) + delta;
+    float r = gamma*sin(theta) + delta;
+    
+    this.pos.x = r*cos(theta);
+    this.pos.y = r*sin(theta);
   }
 }
 
-final float min_alpha = TWO_PI/13.0;
-final float max_alpha = TWO_PI/7.0;
+final float min_alpha = TWO_PI/20.0;
+final float max_alpha = TWO_PI/13.0;
 
 final float min_beta = 0.0;
 final float max_beta = TWO_PI;
@@ -68,7 +72,9 @@ OrbitalParticle new_random_orbital_particle()
 {
   int[] dir ={-1,1};
 
-  int sign_alpha = dir[(int)random(0,2)];
+  //int sign_alpha = dir[(int)random(0,2)];
+  
+  int sign_alpha = 1;
   
   float alpha = sign_alpha*random(min_alpha, max_alpha);
   float beta = random(min_beta, max_beta);
@@ -76,6 +82,8 @@ OrbitalParticle new_random_orbital_particle()
   float delta = random(min_delta, max_delta);
   
   float gamma = random(0, min(delta-min_delta, max_delta-delta));
+
+  println("" + alpha + " " + beta + " " + gamma + " " + delta );
 
   return new OrbitalParticle(alpha, beta, gamma, delta);
 }
@@ -116,7 +124,7 @@ void setup()
   
   colorMode(HSB, 100);
   
-  particle_list = new LinkedList<Particle>();
+  particle_list = new LinkedList<OrbitalParticle>();
   initialize_particle_list();
   background(0);
 }
@@ -144,11 +152,11 @@ void update(float t)
 {
   if (particle_list.size() > 0)
   {
-    Iterator<Particle> it = particle_list.iterator();
+    Iterator<OrbitalParticle> it = particle_list.iterator();
 
     while(it.hasNext())
     {
-      Particle p = it.next();
+      OrbitalParticle p = it.next();
 
       p.update(t);
       
@@ -188,7 +196,7 @@ void draw()
   }
   
   pushStyle();
-    for (Particle p : particle_list)
+    for (OrbitalParticle p : particle_list)
     {
       stroke(color_field(p.pos.mag()));
       point(p.pos.x, p.pos.y); 
